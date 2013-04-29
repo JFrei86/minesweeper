@@ -1,3 +1,5 @@
+package minesweeper.ui;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -5,6 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.Timer;
 
 
+@SuppressWarnings("serial")
 public class JTimerLabel extends JLabel implements ActionListener{
 	
 	private int hours = 0;

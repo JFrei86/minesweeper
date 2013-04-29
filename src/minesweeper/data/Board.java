@@ -1,3 +1,4 @@
+package minesweeper.data;
 
 public class Board {
 	public final static int Y_HARD = 16;

@@ -1,3 +1,5 @@
+package minesweeper.ui;
+
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -10,6 +12,7 @@ import javax.swing.JPanel;
 
 
 
+@SuppressWarnings("serial")
 public class MineImage extends JPanel implements Icon{
 	
 	public static final int NOT_A_MINE = -3;

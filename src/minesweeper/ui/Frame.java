@@ -7,6 +7,9 @@ import java.awt.GridLayout;
 
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import minesweeper.ai.*;
 
 /**
@@ -55,6 +58,8 @@ public class Frame extends JFrame
 	private JButton newGame = new JButton("Reset");
 	private JProgressBar minesRemaining;
 	private AIHeuristicSolver AI = new AIHeuristicSolver();
+	
+	private JSlider AIspeed = new JSlider(JSlider.VERTICAL ,0, 1000, 500);
 
 	/**
 	 * Constructor: responsible for the initialization of the game. The method
@@ -81,16 +86,28 @@ public class Frame extends JFrame
 
 		JMenuBar bar = new JMenuBar();
 		JMenu level = new JMenu("Difficulty");
+		JMenu speed = new JMenu("AI Speed");
 		MenuListener listener = new MenuListener();
 
+		AIspeed.addChangeListener(new ChangeListener(){
+
+			@Override
+			public void stateChanged(ChangeEvent arg0)
+			{
+				AI.setMoveDelay(AIspeed.getValue());
+			}
+		});
+		
 		bar.add(newGame);
 		bar.add(level);
+		bar.add(speed);
 		bar.add(timer);
 		bar.add(minesRemaining);
 		level.add(easy);
 		level.add(med);
 		level.add(hard);
 		level.add(custom);
+		speed.add(AIspeed);
 
 		newGame.addActionListener(listener);
 		easy.addActionListener(listener);

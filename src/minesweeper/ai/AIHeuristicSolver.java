@@ -16,7 +16,7 @@ public class AIHeuristicSolver
 
 	public void Initialize(final Frame f)
 	{
-		t = new Timer(250, new ActionListener()
+		t = new Timer(500, new ActionListener()
 		{
 
 			@Override

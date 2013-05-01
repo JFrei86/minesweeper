@@ -19,6 +19,11 @@ import minesweeper.ai.*;
  *         the player has clicked on the board for the first time, the number of
  *         buttons, the number of flags, the Board object taken by the
  *         constructor, the GridLayout of the board panel, etc.
+ * 
+ *         Provides Functions which the AI can use to essentially play the game.
+ *         The AI has direct access to the board, however, it has been
+ *         implemented to only view the parts of the board that have already
+ *         been clicked
  */
 @SuppressWarnings("serial")
 public class Frame extends JFrame
@@ -58,8 +63,8 @@ public class Frame extends JFrame
 	private JButton newGame = new JButton("Reset");
 	private JProgressBar minesRemaining;
 	private AIHeuristicSolver AI = new AIHeuristicSolver();
-	
-	private JSlider AIspeed = new JSlider(JSlider.VERTICAL ,0, 1000, 500);
+
+	private JSlider AIspeed = new JSlider(JSlider.VERTICAL, 0, 1000, 500);
 
 	/**
 	 * Constructor: responsible for the initialization of the game. The method
@@ -89,7 +94,8 @@ public class Frame extends JFrame
 		JMenu speed = new JMenu("AI Speed");
 		MenuListener listener = new MenuListener();
 
-		AIspeed.addChangeListener(new ChangeListener(){
+		AIspeed.addChangeListener(new ChangeListener()
+		{
 
 			@Override
 			public void stateChanged(ChangeEvent arg0)
@@ -97,7 +103,7 @@ public class Frame extends JFrame
 				AI.setMoveDelay(AIspeed.getValue());
 			}
 		});
-		
+
 		bar.add(newGame);
 		bar.add(level);
 		bar.add(speed);
@@ -122,7 +128,7 @@ public class Frame extends JFrame
 	}
 
 	/**
-	 * 
+	 * Resets the game state and the AI to the beginning again.
 	 */
 	public void reset()
 	{
@@ -152,8 +158,11 @@ public class Frame extends JFrame
 	}
 
 	/**
+	 * Terminates the game with the winning or losing state, as determined by
+	 * the flag argument.
 	 * 
 	 * @param aFlag
+	 *            True if the game is in winning state, False if losing state.
 	 */
 	public void endGame(boolean aFlag)
 	{
@@ -203,8 +212,10 @@ public class Frame extends JFrame
 	}
 
 	/**
+	 * Updates the progress bar with the specified value.
 	 * 
 	 * @param n
+	 *            the value to update it to.
 	 */
 	public void updateProgressBar(int n)
 	{
@@ -217,7 +228,7 @@ public class Frame extends JFrame
 	}
 
 	/**
-	 * 
+	 * Clears the graphical components to reinitialize the game
 	 */
 	private void clearGame()
 	{
@@ -229,10 +240,13 @@ public class Frame extends JFrame
 	}
 
 	/**
+	 * Reads in an integer value, Utility for custom games.
 	 * 
 	 * @param s
+	 *            Prompt to be displayed
 	 * @param max
-	 * @return
+	 *            Max value to be returned
+	 * @return a number received from input
 	 */
 	public int getInt(String s, int max)
 	{
@@ -248,22 +262,32 @@ public class Frame extends JFrame
 				if (i > 1 && i <= max)
 					isInvalid = false;
 
-			} catch (Exception e) {}
+			} catch (Exception e)
+			{
+			}
 		}
 		return i;
 	}
 
 	/**
+	 * Raw game click, handles graphical manipulation
 	 * 
 	 * @param y
 	 * @param x
-	 * @param image
 	 */
 	public void click(int y, int x)
 	{
 		click(y, x, board.getBlock(y, x).getNumMines());
 	}
 
+	/**
+	 * Raw game click, handles graphical manipulation
+	 * 
+	 * @param y
+	 * @param x
+	 * @param image
+	 *            the image to display, constant or the number of mines
+	 */
 	public void click(int y, int x, int image)
 	{
 		numButtons--;
@@ -280,6 +304,7 @@ public class Frame extends JFrame
 	}
 
 	/**
+	 * Simulates a recursive click if the clicked area has no mines around it.
 	 * 
 	 * @param y
 	 * @param x
@@ -302,6 +327,8 @@ public class Frame extends JFrame
 	}
 
 	/**
+	 * If called and the number of mines surrounding is equal to the number of
+	 * flags around it, clicks all squares around it.
 	 * 
 	 * @param y
 	 * @param x
@@ -326,6 +353,8 @@ public class Frame extends JFrame
 	}
 
 	/**
+	 * Only called at the beginning of the game, resets the game until the
+	 * clicked box is not a mine.
 	 * 
 	 * @param y
 	 * @param x
@@ -341,10 +370,11 @@ public class Frame extends JFrame
 	}
 
 	/**
+	 * Game simulation click. Handles all click types in the game and calls
+	 * helper functions as needed
 	 * 
 	 * @param y
 	 * @param x
-	 * @param mines
 	 */
 	public void gameClick(int y, int x)
 	{
@@ -376,6 +406,7 @@ public class Frame extends JFrame
 	}
 
 	/**
+	 * Generates a new board and resets the game to the beginning.
 	 * 
 	 * @param y
 	 * @param x
@@ -392,6 +423,12 @@ public class Frame extends JFrame
 
 	}
 
+	/**
+	 * Toggles a flag on a potential mine
+	 * 
+	 * @param y
+	 * @param x
+	 */
 	public void toggleFlag(int y, int x)
 	{
 		if (!board.getBlock(y, x).isFlagged())
@@ -409,6 +446,12 @@ public class Frame extends JFrame
 		}
 	}
 
+	/**
+	 * Handles Menu Events
+	 * 
+	 * @author Jesse Freitas 2013
+	 * 
+	 */
 	private class MenuListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e)
@@ -457,6 +500,12 @@ public class Frame extends JFrame
 		}
 	}
 
+	/**
+	 * Button Click Listener
+	 * 
+	 * @author Jesse Freitas 2013
+	 * 
+	 */
 	private class GameListener implements MouseListener
 	{
 		private int y, x;
@@ -540,6 +589,3 @@ public class Frame extends JFrame
 		f.setVisible(true);
 	}
 }
-/*
- * TODO fix custom game feature if time permits
- */

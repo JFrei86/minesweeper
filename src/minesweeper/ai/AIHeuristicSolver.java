@@ -13,6 +13,7 @@ import javax.swing.Timer;
 public class AIHeuristicSolver
 {
 	private Timer t;
+	private Frame f;
 
 	/**
 	 * Used to start the timer, which calls moves every 500 milliseconds by
@@ -21,21 +22,15 @@ public class AIHeuristicSolver
 	 * @param f
 	 *            the instance of the game to play
 	 */
-	public void Initialize(final Frame f)
+	public AIHeuristicSolver(Frame f){
+		this.f = f;
+	}
+	public void Initialize(final Frame f, ActionListener a)
 	{
-		t = new Timer(500, new ActionListener()
-		{
-
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				makeMove(f);
-			}
-		});
+		t = new Timer(500, a);
 		t.setCoalesce(false); // Prevents the AI from playing with multiple
 								// threads at the same time making it easier to
 								// see when running
-		t.start();
 	}
 
 	/**
@@ -51,10 +46,9 @@ public class AIHeuristicSolver
 	/**
 	 * Makes a move and returns its certainty that the move is not a mine
 	 * 
-	 * @param f
 	 * @return
 	 */
-	public int makeMove(Frame f)
+	public int makeMove()
 	{
 		if (!findCertain(f))
 		{

@@ -6,8 +6,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import java.awt.event.*;
+
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import minesweeper.ai.*;
@@ -62,10 +62,9 @@ public class Frame extends JFrame
 	private JMenuItem custom = new JMenuItem("Custom...");
 	private JButton newGame = new JButton("Reset");
 	private JProgressBar minesRemaining;
-	private AIHeuristicSolver AI = new AIHeuristicSolver();
-
-	private JSlider AIspeed = new JSlider(JSlider.VERTICAL, 0, 1000, 500);
-
+	private AIHeuristicSolver AI = new AIHeuristicSolver(this);
+	private final AIControlFrame AIcontrol = new AIControlFrame(this);
+	
 	/**
 	 * Constructor: responsible for the initialization of the game. The method
 	 * reset() is called upon initialization
@@ -85,35 +84,31 @@ public class Frame extends JFrame
 		minesRemaining.setPreferredSize(new Dimension(1, 1));
 		gameBoard = new JPanel(layout);
 		add(gameBoard);
+		
+		AI.Initialize(this, new ActionListener()
+		{
 
-		AI.Initialize(this);
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				AIcontrol.update(AI.makeMove());
+			}
+		});
 		reset();
 
 		JMenuBar bar = new JMenuBar();
 		JMenu level = new JMenu("Difficulty");
-		JMenu speed = new JMenu("AI Speed");
-		MenuListener listener = new MenuListener();
-
-		AIspeed.addChangeListener(new ChangeListener()
-		{
-
-			@Override
-			public void stateChanged(ChangeEvent arg0)
-			{
-				AI.setMoveDelay(AIspeed.getValue());
-			}
-		});
+		MenuListener listener = new MenuListener();		
 
 		bar.add(newGame);
 		bar.add(level);
-		bar.add(speed);
 		bar.add(timer);
 		bar.add(minesRemaining);
 		level.add(easy);
 		level.add(med);
 		level.add(hard);
 		level.add(custom);
-		speed.add(AIspeed);
+		
 
 		newGame.addActionListener(listener);
 		easy.addActionListener(listener);
@@ -125,6 +120,12 @@ public class Frame extends JFrame
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		pack();
+		AIcontrol.setVisible(true);
+	}
+
+	public AIHeuristicSolver getAI()
+	{
+		return AI;
 	}
 
 	/**
@@ -152,9 +153,6 @@ public class Frame extends JFrame
 		gameBoard.validate();
 		pack();
 
-		if (AI.getTimer().isRunning())
-			AI.getTimer().stop();
-		AI.getTimer().start();
 	}
 
 	/**
